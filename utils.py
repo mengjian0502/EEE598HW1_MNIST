@@ -164,7 +164,6 @@ def adjust_learning_rate_schedule(optimizer, epoch, gammas, schedule, lr, mu):
 
     return lr, mu
 
-
 def save_checkpoint(state, is_best, save_path, filename='checkpoint.pth.tar'):
     torch.save(state, save_path+filename)
     if is_best:
@@ -188,3 +187,24 @@ def log2df(log_file_name):
     for i in range(num_epochs):
         df.loc[i] = [float(x) for x in lines[num_lines-num_epochs+i].split()]
     return df 
+
+if __name__ == "__main__":
+    log = log2df('./save/cnn_mnist/cnn_mnist_lr0.1_wd1e-4_p0.5/cnn_mnist_lr0.1_wd1e-4.log')
+    epoch = log['ep']
+    train_loss = log['tr_loss']
+    test_loss = log['te_loss']
+    train_acc = log['tr_acc']
+    test_acc = log['te_acc']
+
+    table = {
+        'epoch': epoch,
+        'train_loss': train_loss,
+        'test_loss': test_loss,
+        'train_acc':train_acc,
+        'test_acc':test_acc,
+    }
+
+    variable = pd.DataFrame(table, columns=['epoch','train_loss','test_loss', 'train_acc', 'test_acc'])
+    variable.to_csv('cnn_mnist_lr0.1_wd1e-4_p0.5.csv', index=False)
+
+    
