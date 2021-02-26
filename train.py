@@ -62,7 +62,7 @@ def main():
     if 'mlp' in args.model:
         model_cfg.kwargs.update({"depth": args.depth, "dropout": True, "drop_rate":args.drop_rate})
     elif 'cnn' in args.model:
-        model_cfg.kwargs.update({"num_class":10})
+        model_cfg.kwargs.update({"num_class":10, "drop_rate":args.drop_rate})
     else:
         raise NotImplementedError("The current implementations only works for CNN and MLP")
 

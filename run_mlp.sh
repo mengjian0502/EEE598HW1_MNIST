@@ -14,7 +14,7 @@ batch_size=128
 wd=1e-4
 lr=0.1
 
-save_path="./save/${model}/${model}_lr${lr}_wd${wd}/"
+save_path="./save/${model}/${model}_lr${lr}_wd${wd}_LRstepTrue/"
 log_file="${model}_lr${lr}_wd${wd}.log"
 
 $PYTHON -W ignore train.py \

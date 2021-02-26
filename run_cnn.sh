@@ -13,8 +13,9 @@ batch_size=128
 
 wd=1e-4
 lr=0.1
+drop_rate=0.5
 
-save_path="./save/${model}/${model}_lr${lr}_wd${wd}/"
+save_path="./save/${model}/${model}_lr${lr}_wd${wd}_p${drop_rate}/"
 log_file="${model}_lr${lr}_wd${wd}.log"
 
 $PYTHON -W ignore train.py \
@@ -28,3 +29,4 @@ $PYTHON -W ignore train.py \
     --depth 784 400 400 \
     --batch_size ${batch_size} \
     --weight_decay ${wd} \
+    --drop_rate ${drop_rate};
