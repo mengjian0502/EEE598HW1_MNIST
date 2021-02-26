@@ -1,0 +1,15 @@
+Namespace(batch_size=128, depth=[784, 400, 400], drop_rate=0.2, epochs=100, evaluate=True, gammas=[0.1, 0.1], log_file='cnn_mnist_eval.log', lr=0.1, model='cnn_mnist', momentum=0.9, resume='./save/cnn_mnist/cnn_mnist_lr0.1_wd1e-4/model_best.pth.tar', save_path='./save/cnn_mnist/cnn_mnist_lr_wd_eval/', schedule=[60, 80], use_cuda=True, weight_decay=0.0001)
+==> Building model..
+
+Net(
+  (conv1): Conv2d(1, 32, kernel_size=(3, 3), stride=(1, 1))
+  (relu1): ReLU(inplace=True)
+  (conv2): Conv2d(32, 64, kernel_size=(3, 3), stride=(1, 1))
+  (relu2): ReLU(inplace=True)
+  (dropout1): Dropout(p=0.25, inplace=False)
+  (dropout2): Dropout(p=0.5, inplace=False)
+  (fc1): Linear(in_features=9216, out_features=128, bias=True)
+  (fc2): Linear(in_features=128, out_features=10, bias=True)
+)
+Successfully loaded ./save/cnn_mnist/cnn_mnist_lr0.1_wd1e-4/model_best.pth.tar, Pretrained acc = 99.25
+Test accuracy: 99.25

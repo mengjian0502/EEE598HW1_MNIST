@@ -30,6 +30,8 @@ parser.add_argument('--drop_rate', type=float, default=0.2, help='dropout rate (
 parser.add_argument("--depth", required=True, type=int, nargs="+")
 
 parser.add_argument('--save_path', type=str, default='./save/', help='Folder to save checkpoints and log.')
+parser.add_argument('--resume', default='', type=str, help='path of the pretrained model')
+parser.add_argument('--evaluate', action='store_true', help='evaluate the model')
 args = parser.parse_args()
 
 args.use_cuda = torch.cuda.is_available()
@@ -56,7 +58,14 @@ def main():
     # Prepare the model
     logger.info('==> Building model..\n')
     model_cfg = getattr(models, args.model)
-    model_cfg.kwargs.update({"depth": args.depth, "dropout": True, "drop_rate":args.drop_rate})
+
+    if 'mlp' in args.model:
+        model_cfg.kwargs.update({"depth": args.depth, "dropout": True, "drop_rate":args.drop_rate})
+    elif 'cnn' in args.model:
+        model_cfg.kwargs.update({"num_class":10})
+    else:
+        raise NotImplementedError("The current implementations only works for CNN and MLP")
+
     model = model_cfg.base(*model_cfg.args, **model_cfg.kwargs)
     logger.info(model)
 
@@ -65,6 +74,18 @@ def main():
     
     optimizer = optim.SGD(model.parameters(), lr=args.lr, momentum=args.momentum, weight_decay=args.weight_decay)
     criterion = nn.CrossEntropyLoss().cuda()
+
+    # Evaluation only
+    if args.evaluate:
+        check_point = torch.load(args.resume)
+        state_dict = check_point['state_dict']
+        model.load_state_dict(state_dict)
+        logger.info(f"Successfully loaded {args.resume}, Pretrained acc = {check_point['acc']}")
+
+        test_results= test(test_loader, model, criterion)
+        test_acc = test_results['acc']
+        logger.info(f'Test accuracy: {test_acc}')
+        exit()
 
     # Training
     epoch_time = AverageMeter()
