@@ -207,22 +207,22 @@ def log2df(log_file_name):
     return df 
 
 if __name__ == "__main__":
-    log = log2df('./save/cnn_mnist/cnn_mnist_lr0.1_wd1e-4_p0.5/cnn_mnist_lr0.1_wd1e-4.log')
+    log = log2df('./save/cnn_mnist/cnn_mnist_lr0.1_wd1e-4_p0.2/cnn_mnist_lr0.1_wd1e-4.log')
     epoch = log['ep']
     train_loss = log['tr_loss']
-    test_loss = log['te_loss']
+    test_loss = log['val_loss']
     train_acc = log['tr_acc']
-    test_acc = log['te_acc']
+    test_acc = log['val_acc']
 
     table = {
         'epoch': epoch,
         'train_loss': train_loss,
-        'test_loss': test_loss,
+        'valid_loss': test_loss,
         'train_acc':train_acc,
-        'test_acc':test_acc,
+        'valid_acc':test_acc,
     }
 
-    variable = pd.DataFrame(table, columns=['epoch','train_loss','test_loss', 'train_acc', 'test_acc'])
-    variable.to_csv('cnn_mnist_lr0.1_wd1e-4_p0.5.csv', index=False)
+    variable = pd.DataFrame(table, columns=['epoch','train_loss','valid_loss', 'train_acc', 'valid_acc'])
+    variable.to_csv('cnn_mnist_lr0.1_wd1e-4_p0.2.csv', index=False)
 
     

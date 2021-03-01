@@ -7,7 +7,7 @@ Before running the experiments, clone the project:
 git clone https://github.com/mengjian0502/EEE598HW1_MNIST.git
 ```
 
-**Important note: ** Please change the `PYTHON` path inside all the `.sh` files before running the training or evaluation. 
+**Important note:** Please change the `PYTHON` path inside all the `.sh` files before running the training or evaluation. 
 
 ## Training
 
@@ -31,7 +31,7 @@ https://drive.google.com/drive/folders/10x9aVxM3blujBqvz3WQfl6DUir_4ttvi?usp=sha
 
 The pretrained CNN model located at:
 
-https://drive.google.com/drive/folders/17Hbl7B5oHBoQJ4GzPODex8PsdVTY5pXC?usp=sharing 
+https://drive.google.com/drive/folders/1j9bvmphn3sIzSb9wnFWjYMwHcAFRkHBW?usp=sharing
 
 Given the pretrained model, please save the model to the `save` folder then change the . 
 
