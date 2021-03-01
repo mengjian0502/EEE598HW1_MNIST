@@ -30,3 +30,7 @@ MLP(
 )
 Successfully loaded ./save/mlp_mnist/mlp_mnist_lr0.1_wd1e-4/model_best.pth.tar, Pretrained acc = 98.78
 Test accuracy: 98.78
+Namespace(batch_size=128, depth=[784, 400, 400], drop_rate=0.2, epochs=100, evaluate=True, gammas=[0.1, 0.1], log_file='mlp_mnist_eval.log', lr=0.1, model='mlp_mnist', momentum=0.9, resume='./save/mlp_mnist/mlp_mnist_lr0.1_wd1e-4/model_best.pth.tar', save_path='./save/mlp_mnist/mlp_mnist_lr_wd_eval/', schedule=[60, 80], use_cuda=True, weight_decay=0.0001)
+Namespace(batch_size=128, depth=[784, 400, 400], drop_rate=0.2, epochs=100, evaluate=True, gammas=[0.1, 0.1], log_file='mlp_mnist_eval.log', lr=0.1, model='mlp_mnist', momentum=0.9, resume='./save/mlp_mnist/mlp_mnist_lr0.1_wd1e-4/model_best.pth.tar', save_path='./save/mlp_mnist/mlp_mnist_lr_wd_eval/', schedule=[60, 80], use_cuda=True, weight_decay=0.0001)
+Namespace(batch_size=128, depth=[784, 400, 400], drop_rate=0.2, epochs=100, evaluate=True, gammas=[0.1, 0.1], log_file='mlp_mnist_eval.log', lr=0.1, model='mlp_mnist', momentum=0.9, resume='./save/mlp_mnist/mlp_mnist_lr0.1_wd1e-4/model_best.pth.tar', save_path='./save/mlp_mnist/mlp_mnist_lr_wd_eval/', schedule=[60, 80], use_cuda=True, weight_decay=0.0001)
+Namespace(batch_size=128, depth=[784, 400, 400], drop_rate=0.2, epochs=100, evaluate=True, gammas=[0.1, 0.1], log_file='mlp_mnist_eval.log', lr=0.1, model='mlp_mnist', momentum=0.9, resume='./save/mlp_mnist/mlp_mnist_lr0.1_wd1e-4/model_best.pth.tar', save_path='./save/mlp_mnist/mlp_mnist_lr_wd_eval/', schedule=[60, 80], use_cuda=True, weight_decay=0.0001)

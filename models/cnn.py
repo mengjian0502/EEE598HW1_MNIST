@@ -13,14 +13,14 @@ __all__ = ['cnn_mnist']
 class Net(nn.Module):
     def __init__(self, num_class=10, drop_rate=0.5):
         super(Net, self).__init__()
-        self.conv1 = nn.Conv2d(1, 16, 3, 1)
+        self.conv1 = nn.Conv2d(1, 32, 3, 1)
         self.relu1 = nn.ReLU(inplace=True)
-        self.conv2 = nn.Conv2d(16, 32, 3, 1)
+        self.conv2 = nn.Conv2d(32, 64, 3, 1)
         self.relu2 = nn.ReLU(inplace=True)
 
         self.dropout1 = nn.Dropout(drop_rate)
         self.dropout2 = nn.Dropout(drop_rate)
-        self.fc1 = nn.Linear(4608, 128)
+        self.fc1 = nn.Linear(9216, 128)
         self.fc2 = nn.Linear(128, num_class)
 
     def forward(self, x):

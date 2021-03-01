@@ -53,7 +53,7 @@ def main():
     logger.info(args)
 
     # Prepare the dataset
-    train_loader, test_loader = get_loader(args.batch_size)
+    train_loader, valid_loader, test_loader = get_loader(args.batch_size, args.model)
 
     # Prepare the model
     logger.info('==> Building model..\n')
@@ -90,7 +90,7 @@ def main():
     # Training
     epoch_time = AverageMeter()
     best_acc = 0.
-    columns = ['ep', 'lr', 'tr_loss', 'tr_acc', 'te_loss', 'te_acc', 'best_acc']
+    columns = ['ep', 'lr', 'tr_loss', 'tr_acc', 'val_loss', 'val_acc', 'best_acc']
 
     for epoch in range(args.epochs):
         current_lr, current_momentum = adjust_learning_rate_schedule(
@@ -100,11 +100,11 @@ def main():
         train_results = train(train_loader, model, criterion, optimizer)
 
         # Test phase
-        test_results = test(test_loader, model, criterion)
-        is_best = test_results['acc'] > best_acc
+        valid_results = test(valid_loader, model, criterion)
+        is_best = valid_results['acc'] > best_acc
 
         if is_best:
-            best_acc = test_results['acc']
+            best_acc = valid_results['acc']
 
         state = {
             'state_dict': model.state_dict(),
@@ -116,9 +116,15 @@ def main():
         filename='checkpoint.pth.tar'
         save_checkpoint(state, is_best, args.save_path, filename=filename)
         
-        values = [epoch + 1, optimizer.param_groups[0]['lr'], train_results['loss'], train_results['acc'], test_results['loss'], test_results['acc'], best_acc]
+        values = [epoch + 1, optimizer.param_groups[0]['lr'], train_results['loss'], train_results['acc'], valid_results['loss'], valid_results['acc'], best_acc]
 
         print_table(values, columns, epoch, logger)
+
+    # Test
+    test_results = test(test_loader, model, criterion)
+    test_acc = test_results['acc']
+    logger.info(f'Test accuracy: {test_acc}')
+
 
 if __name__ == '__main__':
     main()

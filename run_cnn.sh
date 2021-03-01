@@ -11,7 +11,7 @@ model=cnn_mnist
 epochs=30
 batch_size=128
 
-wd=1e-4
+wd=2e-4
 lr=0.1
 drop_rate=0.5
 

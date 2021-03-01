@@ -32,7 +32,6 @@ class MLP(nn.Module):
         self.classifier = nn.Linear(in_channels, num_class, bias=True)   # last fc
 
     def forward(self, x):
-        x = x.flatten(1)
         x = self.mlp(x)
         x = self.classifier(x)
         return x

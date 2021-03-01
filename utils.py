@@ -5,24 +5,42 @@ MNIST classification challenge
 import time 
 import torch
 import shutil
+import gzip
+import pickle
 import tabulate
 import numpy as np
 import pandas as pd
-from torch.utils.data import DataLoader
+import matplotlib.pyplot as plt
+from torch.utils.data import Dataset, TensorDataset, DataLoader
 from torchvision import datasets, transforms
 
-def get_loader(batch_size):
-    transform=transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize((0.1307,), (0.3081,))
-    ])
-    train_dataset = datasets.MNIST('./dataset', train=True, download=True, transform=transform)
-    test_dataset = datasets.MNIST('./dataset', train=False, download=True, transform=transform)
+def mnist_reshape(vec):
+    num_img = vec.size(0)
+    img = vec.contiguous().view(num_img, 28, 28).unsqueeze(1)
+    return img
 
-    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=4)
+def get_loader(batch_size, model):
+    with gzip.open('./dataset/mnist.pkl.gz', 'rb') as f:
+        train_set, valid_set, test_set = pickle.load(f, encoding="latin1")
+    
+    train_set = tuple([torch.from_numpy(train_set[0]), torch.from_numpy(train_set[1]).long()])
+    valid_set = tuple([torch.from_numpy(valid_set[0]), torch.from_numpy(valid_set[1]).long()])
+    test_set = tuple([torch.from_numpy(test_set[0]), torch.from_numpy(test_set[1]).long()])
+
+    if 'cnn' in model:
+        train_set = tuple([mnist_reshape(train_set[0]), train_set[1]])
+        valid_set = tuple([mnist_reshape(valid_set[0]), valid_set[1]])
+        test_set = tuple([mnist_reshape(test_set[0]), test_set[1]])
+        
+    train_dataset = TensorDataset(train_set[0], train_set[1])
+    val_dataset = TensorDataset(valid_set[0], valid_set[1])
+    test_dataset = TensorDataset(test_set[0], test_set[1])
+
+    train_loader =  DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=4)
+    valid_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=4)
     test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False, num_workers=4)
 
-    return train_loader, test_loader
+    return train_loader, valid_loader, test_loader
 
 class AverageMeter(object):
     """Computes and stores the average and current value"""
