@@ -13,6 +13,8 @@ import torch
 import torch.optim as optim
 import models
 import torch.nn as nn
+from collections import OrderedDict, defaultdict
+from functools import partial
 
 parser = argparse.ArgumentParser(description='PyTorch MNIST Example')
 parser.add_argument('--model', type=str, choices=['mlp_mnist', 'cnn_mnist'], help='model type')
@@ -35,7 +37,7 @@ parser.add_argument('--evaluate', action='store_true', help='evaluate the model'
 args = parser.parse_args()
 
 args.use_cuda = torch.cuda.is_available()
-    
+
 def main():    
     if not os.path.isdir(args.save_path):
         os.makedirs(args.save_path)    
@@ -75,6 +77,10 @@ def main():
     optimizer = optim.SGD(model.parameters(), lr=args.lr, momentum=args.momentum, weight_decay=args.weight_decay)
     criterion = nn.CrossEntropyLoss().cuda()
 
+    activations = defaultdict(list)
+    def save_activation(name, mod, inp, out):
+	    activations[name].append(out.cpu())    
+
     # Evaluation only
     if args.evaluate:
         check_point = torch.load(args.resume)
@@ -82,7 +88,21 @@ def main():
         model.load_state_dict(state_dict)
         logger.info(f"Successfully loaded {args.resume}, Pretrained acc = {check_point['acc']}")
 
+        # register hook
+        for name, m in model.named_modules():
+            if isinstance(m, nn.Conv2d):
+                m.register_forward_hook(partial(save_activation, name))
+                
+        
         test_results= test(test_loader, model, criterion)
+        
+        activations = {name: torch.cat(outputs, 0) for name, outputs in activations.items()}
+        
+        for i, (k,v) in enumerate(activations.items()):
+            ofm = v[0].numpy()
+            import pdb;pdb.set_trace()
+            
+
         test_acc = test_results['acc']
         logger.info(f'Test accuracy: {test_acc}')
         exit()

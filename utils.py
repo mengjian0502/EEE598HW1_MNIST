@@ -4,6 +4,7 @@ MNIST classification challenge
 
 import time 
 import torch
+import torch.nn as nn
 import shutil
 import gzip
 import pickle
@@ -205,6 +206,46 @@ def log2df(log_file_name):
     for i in range(num_epochs):
         df.loc[i] = [float(x) for x in lines[num_lines-num_epochs+i].split()]
     return df 
+
+# sparsity record
+class Hook_record_input():
+    def __init__(self, module):
+        self.hook = module.register_forward_hook(self.hook_fn)
+
+    def hook_fn(self, module, input, output):
+        self.output = output
+
+    def close(self):
+        self.hook.remove()
+
+
+def add_input_record_Hook(model, name_as_key=False):
+    Hooks = {}
+    if name_as_key:
+        for name,module in model.named_modules():
+            if isinstance(module, nn.Conv2d) or isinstance(module, nn.Linear):
+                Hooks[name] = Hook_record_input(module)
+            
+    else:
+        for k,module in enumerate(model.modules()):
+            if isinstance(module, nn.Conv2d) or isinstance(module, nn.Linear):
+                Hooks[k] = Hook_record_input(module)
+    return Hooks
+
+def get_ofm(hooks):
+    for k in hooks.keys():
+        import pdb;pdb.set_trace()
+
+def get_activation_sparsity(Hooks):
+    total = 0.
+    nonzeros = 0.
+    for k in Hooks.keys():
+        input = Hooks[k].input[0]
+        input_mask = (input != 0).float()
+        nonzeros += input_mask.sum()
+        total += input_mask.numel()
+    input_sparsity = (total - nonzeros) / total
+    return input_sparsity
 
 if __name__ == "__main__":
     log = log2df('./save/cnn_mnist/cnn_mnist_lr0.1_wd1e-4_p0.2/cnn_mnist_lr0.1_wd1e-4.log')
