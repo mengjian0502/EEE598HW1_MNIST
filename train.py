@@ -77,6 +77,7 @@ def main():
     optimizer = optim.SGD(model.parameters(), lr=args.lr, momentum=args.momentum, weight_decay=args.weight_decay)
     criterion = nn.CrossEntropyLoss().cuda()
 
+    # hook the output feature maps
     activations = defaultdict(list)
     def save_activation(name, mod, inp, out):
 	    activations[name].append(out.cpu())    
@@ -95,16 +96,16 @@ def main():
                 
         
         test_results= test(test_loader, model, criterion)
+        test_acc = test_results['acc']
+        logger.info(f'Test accuracy: {test_acc}')
         
         activations = {name: torch.cat(outputs, 0) for name, outputs in activations.items()}
         
         for i, (k,v) in enumerate(activations.items()):
             ofm = v[0].numpy()
-            import pdb;pdb.set_trace()
+            # import pdb;pdb.set_trace()
             
 
-        test_acc = test_results['acc']
-        logger.info(f'Test accuracy: {test_acc}')
         exit()
 
     # Training
